@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "my-tea-shop-975a7",
+  "private_key_id": "ebcc5d2bca0fe7bac19f4eff820f37d85ceacb9a",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCHfAJn9322Utr0\nOWWx9gcEpqlTdgRfqVi2Zdt6PHFN6mXaNtgW3RMCkI8JierFgN22OrHSPAFmbBja\nzPbwVXZsLV1VXi66J+7Za37EteOqPpVnuub3/ZNxuiJJyOBwcwWtNcZl/lHorizs\nVQehcHz4OBDxe9OtzoQU1U+0iKMuMb+PUvXyfB7oU1iGUR++GXuSgI9mL3Z0MpV/\naUhRFd7bQ9r2+LwE04I/6cA/3n37fg7tGbAJJ5z3yMVVwTAjGqI5jLaABl2fu35G\nx2rDppHcTGY+7i0+vOrtRCT3292DYgRSEq1rNhJnV2MSkTRP/x5gF5/PBFz/Y2NZ\n+T1wnY1RAgMBAAECggEADjJ5ABMHqdjh19DB7tWUo7ChMr09tRaGVMq0poj56IvE\n84pmt3KgINcsHfhFUT/xO7zH0Ht4PBbcveTXhZS3DZvtWVo+tEQl+8OPa6aRvk/D\nkTSdKmR4lGTIXgn+NtpewGlPqnVteN/zlipM2+ZxOgOKBvwOUPrAjXxS11ywGNF3\nsyGLf70Kv3Y+AkUMO5g2TiOMH3K43qPgMq+iaKKFQVxCTwN7u/MH99K0hZavp5m6\neJCs+RopVqdoMejg9O2t6WIMFjqDTPch117DuSh3vnnoDubv8M8Ny/WTuyOvrpGr\nIp1dP0cqVqlP5ATMfi8W77Io/8QwZZ16AzwakWEUfwKBgQC9s5duzGp/l3h1Ptiz\ngv81QO55YNowgzRIVdsinhc1efkHB4JgrZeDJG0bTjtCiWsQUnCr791sboutBo0+\nQ42Z7As32Wf1k8Av8gTGP4pWvdP83UYDV6B9JhDRcbkpDWCQNe3HHa/ZCtNJNdBu\nQi+saHEjRzz8dkCnFbF9WIbIvwKBgQC21ap4BbX6La88zK2BUwlayg41cg6tY+jH\nq8UqJM3evx44OBXy/Hk6JBdn2sKqk42m5iQHXmpAA0/QTAgX5ytCwDVzYgZ7mXNT\nmw+UNdJG5pFeCaolLZVexgyzPkmEWG6TDtYVHhLr/9b3RonFXW5Vg62LDXJ9v+G4\nMhWx1hWd7wKBgQCQGDu98M4wjujz/kHy0V1zoRfD4Rq7YN401+p1eCpe94B+o2iY\ncSO2fNPXuuvulZ1ar5RgNfo2ZB361xAwrHWB5rd6u8xo0MtaX/bac+dsDhNZbubA\noS4KAgEiZsTj9wJTaHNuHRG2xq9JW/Qv3FyEFG1kA7fCeTyQ7jx83uK61wKBgCLR\nxDpBVCvGAYaBsFVdu/1XV6dkBlmNGmrUUqM5CR/vo9CvFbcF0Ax7jR2RMtuLaEGt\nuJTSrUdtmgigQjZTJxD6S/OianuleKomcKwYJ+iqxmpzSrzz1muLKiYEqbmTodNN\n0wWIia/6NDU5cMluhrGwdx9xOympnlIW77zDebBvAoGAfbMcZMLLyRlq/MAkWcMI\nhEEjyBUOKphx4Slh+esImRdDaTCPcHZ4vp9Zaao7cbXxsTcu7VOpLwoAdH1tTLU0\n4op/yZHchyaLGDHf8sZotGiPCr7aeA59UvbNS8lcF4Iv1tI8YA7AErxMt7Rcf01N\nKa5ChZOhwCLPPwV/PZ1DJ7c=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-fbsvc@my-tea-shop-975a7.iam.gserviceaccount.com",
+  "client_id": "104942364366505978874",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40my-tea-shop-975a7.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

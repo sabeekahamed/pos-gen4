@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+{% block content %}
+<h3>Reports</h3>
+<div class="card p-3 mb-3">
+  <form id="report-form" class="row g-2">
+    <div class="col-md-3"><input type="date" name="start_date" class="form-control"></div>
+    <div class="col-md-3"><input type="date" name="end_date" class="form-control"></div>
+    <div class="col-md-4">
+      <select name="product_id" class="form-select">
+        <option value="">All Products</option>
+        {% for p in products %}<option value="{{ p.id }}">{{ p.name }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2"><button class="btn btn-primary w-100">Filter</button></div>
+  </form>
+</div>
+
+<div class="card p-3 mb-3">
+  <h5>Sales</h5>
+  <table class="table" id="report-table"><thead><tr><th>Item</th><th>Qty</th><th>Total</th><th>When</th><th>Payment</th></tr></thead><tbody></tbody></table>
+</div>
+
+<div class="card p-3">
+  <h5>Consolidated by date</h5>
+  <table class="table" id="by-date"><thead><tr><th>Date</th><th>Qty</th><th>Amount</th></tr></thead><tbody></tbody></table>
+</div>
+
+<div class="card p-3 mt-3">
+  <h5>Consolidated by product & payment mode</h5>
+  <div id="by-product-payment"></div>
+</div>
+
+<script>
+$("#report-form").submit(function(e){
+  e.preventDefault();
+  const filters = {};
+  $(this).serializeArray().forEach(x=>filters[x.name]=x.value);
+  $.ajax({url:"/api/reports", type:"POST", contentType:"application/json", data: JSON.stringify(filters), success:function(res){
+    const tbody=$("#report-table tbody").empty();
+    res.rows.forEach(r=>tbody.append(`<tr><td>${r.item}</td><td>${r.quantity}</td><td>${r.total}</td><td>${r.timestamp}</td><td>${r.payment_mode||'Cash'}</td></tr>`));
+    const bydate=$("#by-date tbody").empty();
+    Object.keys(res.by_date).forEach(d=> bydate.append(`<tr><td>${d}</td><td>${res.by_date[d].qty}</td><td>${res.by_date[d].amount.toFixed(2)}</td></tr>`));
+    const container = $("#by-product-payment").empty();
+    Object.keys(res.by_product_payment).forEach(prod=>{
+      const obj = res.by_product_payment[prod];
+      let html = `<h6>${prod}</h6><table class="table"><thead><tr><th>Payment Mode</th><th>Qty</th><th>Amount</th></tr></thead><tbody>`;
+      Object.keys(obj).forEach(mode=> html+=`<tr><td>${mode}</td><td>${obj[mode].qty}</td><td>${obj[mode].amount.toFixed(2)}</td></tr>`);
+      html += "</tbody></table>";
+      container.append(html);
+    });
+  }});
+});
+$("#report-form").submit();
+</script>
+{% endblock %}

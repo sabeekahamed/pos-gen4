@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+  <h3>Attendance</h3>
+  <div>
+    <button class="btn btn-sm btn-secondary" id="import-att-btn">Import</button>
+    <a class="btn btn-sm btn-info" href="/attendance/export">Export</a>
+  </div>
+</div>
+
+<form id="att-form" class="card p-3 mb-3">
+  <div class="row g-2">
+    <div class="col-md-6">
+      <select name="employee_id" class="form-select" required id="att-employee"></select>
+    </div>
+    <div class="col-md-3"><select name="status" class="form-select"><option value="in">Check-in</option><option value="out">Check-out</option></select></div>
+    <div class="col-md-3"><button class="btn btn-primary w-100">Record</button></div>
+  </div>
+</form>
+
+<form id="import-att-form" method="post" action="/attendance/import" enctype="multipart/form-data" class="d-none"><input type="file" name="file" id="import-att-file" accept=".csv"></form>
+
+<div class="card p-3">
+  <table class="table" id="attendance-table"><thead><tr><th>Employee</th><th>Status</th><th>Time</th><th>Action</th></tr></thead><tbody></tbody></table>
+</div>
+
+<script>
+function loadEmployeesSelect(){
+  $.getJSON("/api/employees", function(data){
+    const sel = $("#att-employee").empty().append('<option value="">--select--</option>');
+    data.employees.forEach(e => sel.append(`<option value="${e.id}">${e.name}</option>`));
+  });
+}
+function loadAttendance(){
+  $.getJSON("/api/attendance", function(data){
+    const tbody = $("#attendance-table tbody").empty();
+    data.attendance.forEach(a => tbody.append(`<tr data-id="${a.id}"><td>${a.employee_id}</td><td>${a.status}</td><td>${a.timestamp}</td><td><button class="btn btn-sm btn-danger del">Del</button></td></tr>`));
+  });
+}
+$("#att-form").submit(function(e){ e.preventDefault(); $.post("/api/attendance", $(this).serialize(), function(){ loadAttendance(); }); });
+$("#attendance-table").on("click",".del", function(){ if(!confirm("Delete?")) return; const id=$(this).closest("tr").data("id"); $.ajax({url:`/api/attendance/${id}`, type:"DELETE", success:loadAttendance}); });
+$("#import-att-btn").click(()=>$("#import-att-file").click()); $("#import-att-file").change(()=>$("#import-att-form").submit());
+loadEmployeesSelect(); loadAttendance();
+</script>
+{% endblock %}

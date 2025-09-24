@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="height:75vh;">
+  <div class="card p-4" style="width:360px">
+    <h4 class="mb-3 text-center">Shop Login</h4>
+    <form id="login-form">
+      <div class="mb-2"><input name="username" class="form-control" placeholder="Username" required></div>
+      <div class="mb-2"><input name="password" type="password" class="form-control" placeholder="Password" required></div>
+      <button class="btn btn-primary w-100">Login</button>
+    </form>
+    <div id="login-msg" class="mt-2 text-danger text-center"></div>
+  </div>
+</div>
+
+<script>
+$("#login-form").submit(function(e){
+  e.preventDefault();
+  $.post("/api/login", $(this).serialize(), function(res){
+    if(res.success){
+      window.location.href = "/";
+    } else {
+      $("#login-msg").text(res.message || "Login failed");
+    }
+  }).fail(function(){ $("#login-msg").text("Server error"); });
+});
+</script>
+{% endblock %}

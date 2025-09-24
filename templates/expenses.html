@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+  <h3>Expenses</h3>
+  <div>
+    <button class="btn btn-sm btn-secondary" id="import-exp-btn">Import</button>
+    <a class="btn btn-sm btn-info" href="/expenses/export">Export</a>
+    <button class="btn btn-sm btn-primary" id="open-add-exp">+ Add</button>
+  </div>
+</div>
+
+<div id="exp-form-card" class="card p-3 mb-3 d-none">
+  <form id="exp-form">
+    <div class="row g-2">
+      <div class="col-md-5"><input name="title" class="form-control" placeholder="Title" required></div>
+      <div class="col-md-3"><input name="amount" type="number" step="0.01" class="form-control" placeholder="Amount" required></div>
+      <div class="col-md-4"><input name="note" class="form-control" placeholder="Note"></div>
+    </div>
+    <div class="mt-2"><button class="btn btn-success">Save</button></div>
+  </form>
+</div>
+
+<form id="import-exp-form" method="post" action="/expenses/import" enctype="multipart/form-data" class="d-none"><input type="file" name="file" id="import-exp-file" accept=".csv"></form>
+
+<div class="card p-3"><table class="table" id="expenses-table"><thead><tr><th>Title</th><th>Amount</th><th>Note</th><th>Action</th></tr></thead><tbody></tbody></table></div>
+
+<script>
+function loadExpenses(){
+  $.getJSON("/api/expenses", function(data){
+    const tbody = $("#expenses-table tbody").empty();
+    data.expenses.forEach(e => tbody.append(`<tr data-id="${e.id}"><td>${e.title}</td><td>${e.amount}</td><td>${e.note}</td><td><button class="btn btn-sm btn-danger del">Delete</button></td></tr>`));
+  });
+}
+$("#open-add-exp").click(()=>$("#exp-form-card").removeClass("d-none"));
+$("#exp-form").submit(function(e){ e.preventDefault(); $.post("/api/expenses", $(this).serialize(), function(){ loadExpenses(); $("#exp-form-card").addClass("d-none"); }); });
+$("#expenses-table").on("click",".del", function(){ if(!confirm("Delete expense?")) return; const id=$(this).closest("tr").data("id"); $.ajax({url:`/api/expenses/${id}`, type:"DELETE", success:loadExpenses}); });
+$("#import-exp-btn").click(()=>$("#import-exp-file").click()); $("#import-exp-file").change(()=>$("#import-exp-form").submit());
+loadExpenses();
+</script>
+{% endblock %}

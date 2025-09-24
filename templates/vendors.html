@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+  <h3>Vendors</h3>
+  <div>
+    <button class="btn btn-sm btn-secondary" id="import-v-btn">Import</button>
+    <a class="btn btn-sm btn-info" href="/vendors/export">Export</a>
+    <button class="btn btn-sm btn-primary" id="open-add-v">+ Add</button>
+  </div>
+</div>
+
+<div id="v-form-card" class="card p-3 mb-3 d-none">
+  <form id="v-form">
+    <div class="row g-2">
+      <div class="col-md-4"><input name="name" class="form-control" placeholder="Name" required></div>
+      <div class="col-md-3"><input name="phone" class="form-control" placeholder="Phone"></div>
+      <div class="col-md-5"><input name="address" class="form-control" placeholder="Address"></div>
+    </div>
+    <div class="mt-2"><button class="btn btn-success">Save</button></div>
+  </form>
+</div>
+
+<form id="import-v-form" method="post" action="/vendors/import" enctype="multipart/form-data" class="d-none"><input type="file" name="file" id="import-v-file" accept=".csv"></form>
+
+<div class="card p-3"><table class="table" id="vendors-table"><thead><tr><th>Name</th><th>Phone</th><th>Address</th><th>Action</th></tr></thead><tbody></tbody></table></div>
+
+<script>
+function loadVendors(){
+  $.getJSON("/api/vendors", function(data){
+    const tbody = $("#vendors-table tbody").empty();
+    data.vendors.forEach(v => tbody.append(`<tr data-id="${v.id}"><td>${v.name}</td><td>${v.phone||''}</td><td>${v.address||''}</td><td><button class="btn btn-sm btn-danger del">Delete</button></td></tr>`));
+  });
+}
+$("#open-add-v").click(()=>$("#v-form-card").removeClass("d-none"));
+$("#v-form").submit(function(e){ e.preventDefault(); $.post("/api/vendors", $(this).serialize(), function(){ loadVendors(); $("#v-form-card").addClass("d-none"); }); });
+$("#vendors-table").on("click",".del", function(){ if(!confirm("Delete vendor?")) return; const id=$(this).closest("tr").data("id"); $.ajax({url:`/api/vendors/${id}`, type:"DELETE", success:loadVendors}); });
+$("#import-v-btn").click(()=>$("#import-v-file").click()); $("#import-v-file").change(()=>$("#import-v-form").submit());
+loadVendors();
+</script>
+{% endblock %}

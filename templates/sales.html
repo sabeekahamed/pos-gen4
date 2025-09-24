@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+{% block content %}
+<h3>Add Sale</h3>
+<div class="card p-3 mb-3">
+  <form id="sale-form" class="row g-2">
+    <div class="col-md-5"><select class="form-select" name="product" id="sale-product" required></select></div>
+    <div class="col-md-2"><input type="number" class="form-control" name="quantity" value="1" required></div>
+    <div class="col-md-3"><select name="payment_mode" class="form-select"><option>Cash</option><option>Card</option><option>UPI</option></select></div>
+    <div class="col-md-2"><button class="btn btn-primary w-100">Add</button></div>
+  </form>
+</div>
+
+<div class="card p-3">
+  <h5>Last 5 Sales</h5>
+  <table class="table" id="last-sales"><thead><tr><th>Item</th><th>Qty</th><th>Price</th><th>Total</th><th>Time</th></tr></thead><tbody></tbody></table>
+</div>
+
+<script>
+function loadProductsForSale(){
+  $.getJSON("/api/products", function(data){
+    const sel = $("#sale-product").empty().append('<option value="">--select product--</option>');
+    data.products.forEach(p => sel.append(`<option value="${p.id}">${p.name} - ${p.price}</option>`));
+  });
+}
+function loadLastSales(){
+  $.getJSON("/api/sales", function(data){
+    const tbody = $("#last-sales tbody").empty();
+    data.sales.slice(0,5).forEach(s => tbody.append(`<tr><td>${s.item}</td><td>${s.quantity}</td><td>${s.price}</td><td>${s.total}</td><td>${s.timestamp}</td></tr>`));
+  });
+}
+$("#sale-form").submit(function(e){ e.preventDefault(); $.post("/api/add_sale", $(this).serialize(), function(res){ if(res.success){ const tbody=$("#last-sales tbody").empty(); res.last_sales.forEach(s=>tbody.append(`<tr><td>${s.item}</td><td>${s.quantity}</td><td>${s.price}</td><td>${s.total}</td><td>${s.timestamp}</td></tr>`)); $("#sale-form")[0].reset(); } else alert(res.message); }); });
+loadProductsForSale(); loadLastSales();
+</script>
+{% endblock %}

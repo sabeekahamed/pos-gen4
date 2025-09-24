@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+  <h3>Employees</h3>
+  <div>
+    <button class="btn btn-sm btn-secondary" id="import-emp-btn">Import</button>
+    <a class="btn btn-sm btn-info" href="/employees/export">Export</a>
+    <button class="btn btn-sm btn-primary" id="open-add-emp">+ Add</button>
+  </div>
+</div>
+
+<div id="emp-form-card" class="card p-3 mb-3 d-none">
+  <form id="emp-form">
+    <input type="hidden" name="id" value="">
+    <div class="row g-2">
+      <div class="col-md-4"><input name="name" class="form-control" placeholder="Name" required></div>
+      <div class="col-md-3"><input name="phone" class="form-control" placeholder="Phone"></div>
+      <div class="col-md-3"><input name="role" class="form-control" placeholder="Role"></div>
+      <div class="col-md-2"><button class="btn btn-success w-100">Save</button></div>
+    </div>
+  </form>
+</div>
+
+<form id="import-emp-form" method="post" action="/employees/import" enctype="multipart/form-data" class="d-none">
+  <input type="file" name="file" id="import-emp-file" accept=".csv">
+</form>
+
+<div class="card p-3">
+  <table class="table" id="employees-table"><thead><tr><th>Name</th><th>Phone</th><th>Role</th><th>Action</th></tr></thead><tbody></tbody></table>
+</div>
+
+<script>
+function loadEmployees(){
+  $.getJSON("/api/employees", function(data){
+    const tbody = $("#employees-table tbody").empty();
+    data.employees.forEach(e => tbody.append(`<tr data-id="${e.id}"><td>${e.name}</td><td>${e.phone||''}</td><td>${e.role||''}</td>
+      <td><button class="btn btn-sm btn-warning edit">Edit</button> <button class="btn btn-sm btn-danger del">Delete</button></td></tr>`));
+  });
+}
+$("#open-add-emp").click(()=>{ $("#emp-form-card").removeClass("d-none"); $("#emp-form")[0].reset(); });
+$("#emp-form").submit(function(e){ e.preventDefault(); const id = $(this).find("input[name=id]").val(); if(id){ $.ajax({url:`/api/employees/${id}`, type:"PUT", data:$(this).serialize(), success:loadEmployees}); } else { $.post("/api/employees", $(this).serialize(), loadEmployees); } $("#emp-form-card").addClass("d-none"); });
+$("#employees-table").on("click",".del", function(){ if(!confirm("Delete employee?")) return; const id = $(this).closest("tr").data("id"); $.ajax({url:`/api/employees/${id}`, type:"DELETE", success:loadEmployees}); });
+$("#employees-table").on("click",".edit", function(){ const tr=$(this).closest("tr"); const id=tr.data("id"); const name=tr.find("td:eq(0)").text(); const phone=tr.find("td:eq(1)").text(); const role=tr.find("td:eq(2)").text(); $("#emp-form-card").removeClass("d-none"); $("#emp-form input[name=id]").val(id); $("#emp-form input[name=name]").val(name); $("#emp-form input[name=phone]").val(phone); $("#emp-form input[name=role]").val(role); });
+$("#import-emp-btn").click(()=>$("#import-emp-file").click()); $("#import-emp-file").change(()=>$("#import-emp-form").submit());
+loadEmployees();
+</script>
+{% endblock %}

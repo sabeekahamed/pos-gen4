@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block content %}
+<h3>Dashboard</h3>
+<div class="row g-3">
+  <div class="col-md-3"><div class="card p-3"><small>Products</small><h4>{{ prod_count }}</h4></div></div>
+  <div class="col-md-3"><div class="card p-3"><small>Stocks</small><h4>{{ stock_count }}</h4></div></div>
+  <div class="col-md-3"><div class="card p-3"><small>Employees</small><h4>{{ emp_count }}</h4></div></div>
+  <div class="col-md-3"><div class="card p-3"><small>Sales</small><h4>{{ sales_count }}</h4></div></div>
+</div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3>Stock</h3>
+  <div>
+    <button class="btn btn-sm btn-secondary" id="import-stocks-btn">Import CSV</button>
+    <a class="btn btn-sm btn-info" href="/stocks/export">Export CSV</a>
+    <button class="btn btn-sm btn-primary" id="open-add-stock">+ Add</button>
+  </div>
+</div>
+
+<div id="stock-form-card" class="card p-3 mb-3 d-none">
+  <form id="stock-form">
+    <div class="row g-2">
+      <div class="col-md-6"><input name="name" class="form-control" placeholder="Stock name" required></div>
+      <div class="col-md-3"><input name="quantity" type="number" class="form-control" placeholder="Quantity" required></div>
+      <div class="col-md-3"><button class="btn btn-success w-100">Save</button></div>
+    </div>
+  </form>
+</div>
+
+<form id="import-stocks-form" method="post" action="/stocks/import" enctype="multipart/form-data" class="d-none">
+  <input type="file" name="file" id="import-stocks-file" accept=".csv">
+</form>
+
+<div class="card p-3">
+  <table class="table" id="stocks-table"><thead><tr><th>Name</th><th>Quantity</th><th>Actions</th></tr></thead><tbody></tbody></table>
+</div>
+
+<script>
+function loadStocks(){
+  $.getJSON("/api/stocks", function(data){
+    const tbody = $("#stocks-table tbody").empty();
+    data.stocks.forEach(s=>{
+      tbody.append(`<tr data-id="${s.id}"><td>${s.name}</td><td>${s.quantity}</td>
+        <td>
+          <button class="btn btn-sm btn-success load">Load</button>
+          <button class="btn btn-sm btn-warning unload">Unload</button>
+          <button class="btn btn-sm btn-danger del">Delete</button>
+        </td></tr>`);
+    });
+  });
+}
+$("#open-add-stock").click(()=>$("#stock-form-card").removeClass("d-none"));
+$("#stock-form").submit(function(e){
+  e.preventDefault(); $.post("/api/stocks", $(this).serialize(), function(){ loadStocks(); $("#stock-form-card").addClass("d-none"); });
+});
+$("#stocks-table").on("click",".load", function(){
+  const id = $(this).closest("tr").data("id"); const qty = prompt("Load quantity","1"); if(!qty) return; $.post(`/api/stocks/load/${id}`, {quantity: qty}, loadStocks);
+});
+$("#stocks-table").on("click",".unload", function(){
+  const id = $(this).closest("tr").data("id"); const qty = prompt("Unload quantity","1"); if(!qty) return; $.post(`/api/stocks/unload/${id}`, {quantity: qty}, loadStocks);
+});
+$("#stocks-table").on("click",".del", function(){ if(!confirm("Delete stock?")) return; const id = $(this).closest("tr").data("id"); $.ajax({url:`/api/stocks/${id}`, type:"DELETE", success:loadStocks}); });
+$("#import-stocks-btn").click(()=>$("#import-stocks-file").click());
+$("#import-stocks-file").change(function(){ $("#import-stocks-form").submit(); });
+loadStocks();
+</script>
+{% endblock %}

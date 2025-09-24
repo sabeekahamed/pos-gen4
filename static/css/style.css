@@ -1,0 +1,7 @@
+body { background:#f5f7fb; font-family: Inter, Arial, sans-serif; }
+.sidebar { width:220px; min-height:100vh; border-right:1px solid #e8eef6; }
+.sidebar .nav-link { color:#333; padding:.6rem 1rem; display:block; }
+.sidebar .nav-link:hover { background:#0472e0; text-decoration:none; }
+.content { flex:1; }
+.card { border-radius:10px; }
+.d-none { display:none !important; }
